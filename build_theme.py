@@ -2,6 +2,7 @@
 """Build the 'Ember' MustardOS theme for 640x480 (RG40XXV / RG40XXH)."""
 import colorsys
 import copy
+import io
 import math
 import os
 import shutil
@@ -533,19 +534,30 @@ SCHEME_FILES = {
 def build_accent_alternatives():
     """alternate/<Name>.muxalt holds every accent-dependent file. Choosing an alternative
     extracts it over the theme (MustardOS 2606.0 behaviour), replacing the schemes and the
-    main-menu tiles; Amber's archive puts the original files back."""
+    main-menu tiles; Amber's archive puts the original files back.
+
+    Newer MustardOS builds cache parsed scheme files and only re-read one when its
+    modification time changes. Extraction gives each file the timestamp stored in the
+    archive, so every accent gets its own fixed timestamp; otherwise files built in the
+    same few seconds look unchanged and the old colours stay in use."""
     alternate_dir = os.path.join(THEME_DIR, "alternate")
     os.makedirs(alternate_dir)
-    temp_image_path = os.path.join(THEME_DIR, ".tmp.png")
-    for accent_name, accent in ACCENTS.items():
+    for accent_index, (accent_name, accent) in enumerate(ACCENTS.items()):
+        timestamp = (2020, 1, 1, 0, accent_index + 1, 0)    # distinct per accent, never the build time
+
+        def add_file(archive, archive_path, data):
+            entry = zipfile.ZipInfo(archive_path, date_time=timestamp)
+            entry.compress_type = zipfile.ZIP_DEFLATED
+            archive.writestr(entry, data)
+
         archive_path = os.path.join(alternate_dir, f"{accent_name}.muxalt")
         with zipfile.ZipFile(archive_path, "w", zipfile.ZIP_DEFLATED) as archive:
             for scheme_path, scheme in SCHEME_FILES.items():
-                archive.writestr(scheme_path, to_ini(recolour(scheme, accent)))
+                add_file(archive, scheme_path, to_ini(recolour(scheme, accent)))
             for item_name, *_ in MENU_ITEMS:
-                render_main_menu(item_name, accent).convert("RGB").save(temp_image_path, optimize=True)
-                archive.write(temp_image_path, f"640x480/image/static/muxlaunch/{item_name}.png")
-    os.remove(temp_image_path)
+                image_bytes = io.BytesIO()
+                render_main_menu(item_name, accent).convert("RGB").save(image_bytes, "PNG", optimize=True)
+                add_file(archive, f"640x480/image/static/muxlaunch/{item_name}.png", image_bytes.getvalue())
 
 
 # ---------------------------------------------------------------- build
