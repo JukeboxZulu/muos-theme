@@ -1,0 +1,49 @@
+name: Build theme
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write   # needed to attach the package to a release on tag pushes
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Build Ember.muxthm
+        run: python build_theme.py
+
+      - name: Check package contents
+        run: |
+          unzip -l dist/Ember.muxthm | tail -1
+          for f in name.txt scheme/global.ini 640x480/scheme/muxlaunch.ini alternate/Amber.muxalt; do
+            unzip -l dist/Ember.muxthm "$f" > /dev/null || { echo "missing $f"; exit 1; }
+          done
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Ember-${{ github.sha }}
+          path: dist/Ember.muxthm
+          if-no-files-found: error
+
+      - name: Attach to release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/Ember.muxthm
+          generate_release_notes: true
