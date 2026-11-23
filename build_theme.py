@@ -3,6 +3,7 @@
 import colorsys
 import copy
 import io
+import json
 import math
 import os
 import shutil
@@ -579,6 +580,31 @@ def copy_user_artwork(app_icon_dir):
             icon.save(os.path.join(app_icon_dir, file_name), optimize=True)
 
 
+# Full-screen images MustardOS shows outside the menus. Each is centred over a solid colour.
+SPLASH_ROLES = ("bootlogo", "shutdown", "reboot", "charge", "load")
+
+
+def copy_user_images(resolution_dir):
+    """assets/image/ is copied into 640x480/image/, keeping any language subfolders.
+    For each splash screen it contains, a <role>.json sets the colour behind the image
+    to the theme background instead of MustardOS's default black."""
+    user_images = os.path.join(REPO_DIR, "assets", "image")
+    if not os.path.isdir(user_images):
+        return
+    image_dir = os.path.join(resolution_dir, "image")
+    shutil.copytree(user_images, image_dir, dirs_exist_ok=True)
+    for role in SPLASH_ROLES:
+        found = any(f"{role}.png" in file_names or f"{role}.bmp" in file_names
+                    for _directory, _subdirectories, file_names in os.walk(user_images))
+        if not found:
+            continue
+        splash_settings = {"background_colour": BACKGROUND, "background_gradient_colour": BACKGROUND,
+                           "png_recolour": ACCENT, "png_recolour_alpha": 0}
+        with open(os.path.join(THEME_DIR, f"{role}.json"), "w") as json_file:
+            json.dump(splash_settings, json_file, indent=2)
+            json_file.write("\n")
+
+
 def build():
     if os.path.exists(THEME_DIR):
         shutil.rmtree(THEME_DIR)
@@ -591,6 +617,7 @@ def build():
         os.makedirs(directory)
 
     copy_user_artwork(app_icon_dir)
+    copy_user_images(resolution_dir)
     for icon_name in app_icons.ICONS:
         app_icons.render(icon_name, APP_ICON_SIZE).save(os.path.join(app_icon_dir, f"{icon_name}.png"), optimize=True)
 

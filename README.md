@@ -29,6 +29,7 @@ CI builds the package on every push and pull request. Pushing a tag such as `v1.
 | `build_theme.py` | Palette, scheme settings, main-menu tiles, accent alternatives and packaging |
 | `app_icons.py` | Drawn app icons (file name = the app's `# ICON:` value) |
 | `assets/catalogue/` | Console/folder artwork, collection art and extra app icons copied into the theme |
+| `assets/image/` | Full-screen images copied into `640x480/image/`: `shutdown.png`, `reboot.png`, `bootlogo.png`, `charge.png`, `load.png` (optionally in a language subfolder such as `English/`). Each is centred over the theme background colour. |
 | `fonts/` | Poppins (SIL Open Font License 1.1) |
 
 To change the palette, edit the constants at the top of `build_theme.py`. To add an accent, add it to `ACCENTS`.
