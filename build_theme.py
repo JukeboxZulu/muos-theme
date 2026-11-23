@@ -443,9 +443,11 @@ APP_ICON_SIZE = 64
 APPS_SCHEME = {"grid": grid_settings(4, 3, -44)}                    # 4x3, icon + name
 APPS_SCHEME["grid"].update({
     "CELL_IMAGE_PADDING_TOP": 14, "CELL_TEXT_PADDING_BOTTOM": 10, "CELL_TEXT_PADDING_SIDE": 6,
-    # icons are white line art; tint them text-grey normally and accent-coloured when focused
+    # icons are white line art; tint them text-grey normally, and dark on the accent-coloured
+    # focused card (like the main menu tiles) so the icon and name stay readable
     "CELL_DEFAULT_IMAGE_RECOLOUR": TEXT, "CELL_DEFAULT_IMAGE_RECOLOUR_ALPHA": 255,
-    "CELL_FOCUS_IMAGE_RECOLOUR": ACCENT, "CELL_FOCUS_IMAGE_RECOLOUR_ALPHA": 255,
+    "CELL_FOCUS_IMAGE_RECOLOUR": BACKGROUND, "CELL_FOCUS_IMAGE_RECOLOUR_ALPHA": 255,
+    "CELL_FOCUS_TEXT": BACKGROUND,
 })
 
 # ---------------------------------------------------------------- user overrides
