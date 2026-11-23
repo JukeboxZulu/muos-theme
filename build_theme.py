@@ -13,12 +13,12 @@ from PIL import Image, ImageDraw, ImageFont
 import app_icons
 
 # ---------------------------------------------------------------- palette
-BACKGROUND = "1D1C1B"
-BUTTON = "353433"
+BACKGROUND = "181715"
+BUTTON = "2c2b2a"
 TEXT = "E0E0E0"
-ACCENT = "F7B954"
+ACCENT = "FFB43C"
 MUTED_TEXT = "8C8580"   # derived: muted text / disabled items
-SHADOW = "141312"       # derived: shadows / darker panels
+SHADOW = "0a0908"       # derived: shadows / darker panels
 
 
 def rgba(hex_colour, alpha=255):
@@ -227,7 +227,7 @@ GLOBAL_SCHEME = {
     "font": {"FONT_LIST_SIZE": 20, "FONT_HEADER_SIZE": 18, "FONT_FOOTER_SIZE": 16,
              "FONT_PANEL_SIZE": 16, "FONT_LIST_PAD_LEFT": 14, "FONT_LIST_PAD_RIGHT": 10,
              "FONT_LIST_PAD_TOP": 0, "FONT_LIST_PAD_BOTTOM": 0,
-             "FONT_HEADER_PAD_TOP": 3, "FONT_HEADER_ICON_PAD_TOP": 0},
+             "FONT_HEADER_PAD_TOP": 6, "FONT_HEADER_ICON_PAD_TOP": 0},
     "glyph": {"HEADER": 26},
     "status": {"ALIGN": 1, "PADDING_LEFT": 0, "PADDING_RIGHT": 10},
     "battery": {"BATTERY_NORMAL": TEXT, "BATTERY_ACTIVE": ACCENT, "BATTERY_LOW": "D35C54",
@@ -378,7 +378,7 @@ def grid_settings(column_count, row_count, label_offset_y, art_only=False, squar
         "CELL_WIDTH": column_width - cell_gap, "CELL_HEIGHT": row_height - cell_gap, "CELL_RADIUS": 4,
         "CELL_BORDER_WIDTH": 4, "CELL_IMAGE_PADDING_TOP": 8, "CELL_TEXT_PADDING_BOTTOM": 8,
         "CELL_TEXT_PADDING_SIDE": 8, "CELL_TEXT_LINE_SPACING": -2,
-        "CELL_SHADOW": SHADOW, "CELL_SHADOW_WIDTH": 6, "CELL_SHADOW_X_OFFSET": 0, "CELL_SHADOW_Y_OFFSET": 3,
+        "CELL_SHADOW": SHADOW, "CELL_SHADOW_WIDTH": 6, "CELL_SHADOW_X_OFFSET": 10, "CELL_SHADOW_Y_OFFSET": 10,
         "CELL_DEFAULT_BACKGROUND": BUTTON, "CELL_DEFAULT_BACKGROUND_ALPHA": 255,
         "CELL_DEFAULT_BACKGROUND_GRADIENT_COLOR": BUTTON, "CELL_DEFAULT_BACKGROUND_GRADIENT_DIRECTION": 0,
         "CELL_DEFAULT_BORDER": BUTTON, "CELL_DEFAULT_BORDER_ALPHA": 255,
@@ -487,12 +487,13 @@ for target_scheme, overrides in USER_OVERRIDES:
 ACCENTS = {
     "Amber":     "F7B954",
     "Tangerine": "F28F55",
-    "Rose":      "F08CA8",
+    "Red": "FF5555",
+    "Bubblegum": "F08CA8",
     "Lavender":  "B8A2F0",
     "Sky":       "79BEF0",
-    "Teal":      "5FCDC3",
-    "Mint":      "86D69A",
-    "Lime":      "C3D663",
+    "Cyan":      "5BD6D6",
+    "Mint":      "7CDC94",
+    "Gameboy Green":      "A0C765",
 }
 BRIGHT_BORDER = "FFC53B"   # brighter gold used on the game-grid focus border
 
