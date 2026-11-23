@@ -19,7 +19,7 @@ BUTTON = "2c2b2a"
 TEXT = "E0E0E0"
 ACCENT = "FFB43C"
 MUTED_TEXT = "8C8580"   # derived: muted text / disabled items
-SHADOW = "0a0908"       # derived: shadows / darker panels
+SHADOW = "0a0908"       # derived: shadow colour (shadows are switched off; alpha 1 is MustardOS's minimum)
 
 
 def rgba(hex_colour, alpha=255):
@@ -187,8 +187,6 @@ def render_main_menu(focused_item, accent=None):
         tile_colour = rgba(accent) if is_focused else rgba(BUTTON)
         content_colour = rgba(BACKGROUND) if is_focused else rgba(TEXT)
         corner_radius = 14 * SUPERSAMPLE
-        drop = 3 * SUPERSAMPLE
-        draw.rounded_rectangle([left, top + drop, right, bottom + drop], radius=corner_radius, fill=rgba(SHADOW))
         draw.rounded_rectangle([left, top, right, bottom], radius=corner_radius, fill=tile_colour)
         centre_x = (left + right) / 2
         if row == 0:
@@ -267,8 +265,8 @@ GLOBAL_SCHEME = {
         "LIST_FOCUS_TEXT": ACCENT, "LIST_FOCUS_TEXT_ALPHA": 255,
         "LIST_FOCUS_GLYPH_ALPHA": 255, "LIST_FOCUS_GLYPH_RECOLOUR": ACCENT,
         "LIST_FOCUS_GLYPH_RECOLOUR_ALPHA": 255,
-        "LIST_FOCUS_SHADOW_COLOUR": SHADOW, "LIST_FOCUS_SHADOW_ALPHA": 160,
-        "LIST_FOCUS_SHADOW_X_OFFSET": 0, "LIST_FOCUS_SHADOW_Y_OFFSET": 2,
+        "LIST_FOCUS_SHADOW_COLOUR": SHADOW, "LIST_FOCUS_SHADOW_ALPHA": 1,
+        "LIST_FOCUS_SHADOW_X_OFFSET": 0, "LIST_FOCUS_SHADOW_Y_OFFSET": 0,
     },
     "image_list": {"IMAGE_LIST_ALPHA": 255, "IMAGE_LIST_RADIUS": 10, "IMAGE_LIST_RECOLOUR": ACCENT,
                    "IMAGE_LIST_RECOLOUR_ALPHA": 0, "IMAGE_PREVIEW_ALPHA": 255,
@@ -281,10 +279,10 @@ GLOBAL_SCHEME = {
                  "DIALOGUE_CONTENT": TEXT, "DIALOGUE_OPTION": BACKGROUND, "DIALOGUE_DIM_ALPHA": 150,
                  "DIALOGUE_SELECTION": ACCENT, "DIALOGUE_SELECTION_ALPHA": 255,
                  "DIALOGUE_RADIUS_MAIN": 12, "DIALOGUE_RADIUS_SELECTED": 8,
-                 "DIALOGUE_SHADOW_COLOUR": "000000", "DIALOGUE_SHADOW_ALPHA": 160,
-                 "DIALOGUE_SHADOW_X_OFFSET": 0, "DIALOGUE_SHADOW_Y_OFFSET": 4,
-                 "DIALOGUE_SHADOW_COLOUR_FOCUS": SHADOW, "DIALOGUE_SHADOW_ALPHA_FOCUS": 96,
-                 "DIALOGUE_SHADOW_X_OFFSET_FOCUS": 0, "DIALOGUE_SHADOW_Y_OFFSET_FOCUS": 2},
+                 "DIALOGUE_SHADOW_COLOUR": SHADOW, "DIALOGUE_SHADOW_ALPHA": 1,
+                 "DIALOGUE_SHADOW_X_OFFSET": 0, "DIALOGUE_SHADOW_Y_OFFSET": 0,
+                 "DIALOGUE_SHADOW_COLOUR_FOCUS": SHADOW, "DIALOGUE_SHADOW_ALPHA_FOCUS": 1,
+                 "DIALOGUE_SHADOW_X_OFFSET_FOCUS": 0, "DIALOGUE_SHADOW_Y_OFFSET_FOCUS": 0},
     "grid": {"BACKGROUND": BACKGROUND, "BACKGROUND_ALPHA": 0},
     "charging": {"CHARGER_BACKGROUND": BACKGROUND, "CHARGER_BACKGROUND_ALPHA": 255,
                  "CHARGER_TEXT": ACCENT, "CHARGER_TEXT_ALPHA": 255, "CHARGER_Y_POS": 100},
@@ -297,8 +295,10 @@ GLOBAL_SCHEME = {
                  "OSK_ITEM_BACKGROUND_FOCUS": ACCENT, "OSK_ITEM_BACKGROUND_FOCUS_ALPHA": 255,
                  "OSK_ITEM_BORDER": BUTTON, "OSK_ITEM_BORDER_ALPHA": 0,
                  "OSK_ITEM_BORDER_FOCUS": ACCENT, "OSK_ITEM_BORDER_FOCUS_ALPHA": 255,
-                 "OSK_ITEM_RADIUS": 6, "OSK_ITEM_SHADOW_COLOUR": SHADOW,
-                 "OSK_ITEM_SHADOW_COLOUR_FOCUS": SHADOW},
+                 "OSK_ITEM_RADIUS": 6, "OSK_ITEM_SHADOW_COLOUR": SHADOW, "OSK_ITEM_SHADOW_ALPHA": 1,
+                 "OSK_ITEM_SHADOW_X_OFFSET": 0, "OSK_ITEM_SHADOW_Y_OFFSET": 0,
+                 "OSK_ITEM_SHADOW_COLOUR_FOCUS": SHADOW, "OSK_ITEM_SHADOW_ALPHA_FOCUS": 1,
+                 "OSK_ITEM_SHADOW_X_OFFSET_FOCUS": 0, "OSK_ITEM_SHADOW_Y_OFFSET_FOCUS": 0},
     "notification": {"MSG_BACKGROUND": BUTTON, "MSG_BACKGROUND_ALPHA": 255, "MSG_BORDER": ACCENT,
                      "MSG_BORDER_ALPHA": 255, "MSG_RADIUS": 10, "MSG_TEXT": TEXT, "MSG_TEXT_ALPHA": 255,
                      # status colours stay fixed across accents
@@ -379,7 +379,7 @@ def grid_settings(column_count, row_count, label_offset_y, art_only=False, squar
         "CELL_WIDTH": column_width - cell_gap, "CELL_HEIGHT": row_height - cell_gap, "CELL_RADIUS": 4,
         "CELL_BORDER_WIDTH": 4, "CELL_IMAGE_PADDING_TOP": 8, "CELL_TEXT_PADDING_BOTTOM": 8,
         "CELL_TEXT_PADDING_SIDE": 8, "CELL_TEXT_LINE_SPACING": -2,
-        "CELL_SHADOW": SHADOW, "CELL_SHADOW_WIDTH": 6, "CELL_SHADOW_X_OFFSET": 10, "CELL_SHADOW_Y_OFFSET": 10,
+        "CELL_SHADOW": SHADOW, "CELL_SHADOW_WIDTH": 0, "CELL_SHADOW_X_OFFSET": 0, "CELL_SHADOW_Y_OFFSET": 0,
         "CELL_DEFAULT_BACKGROUND": BUTTON, "CELL_DEFAULT_BACKGROUND_ALPHA": 255,
         "CELL_DEFAULT_BACKGROUND_GRADIENT_COLOR": BUTTON, "CELL_DEFAULT_BACKGROUND_GRADIENT_DIRECTION": 0,
         "CELL_DEFAULT_BORDER": BUTTON, "CELL_DEFAULT_BORDER_ALPHA": 255,
@@ -394,6 +394,8 @@ def grid_settings(column_count, row_count, label_offset_y, art_only=False, squar
         "CELL_FOCUS_TEXT": ACCENT, "CELL_FOCUS_TEXT_ALPHA": 255,
         "CELL_FOCUS_GLOW": ACCENT, "CELL_FOCUS_GLOW_WIDTH": 0,
         "CURRENT_ITEM_LABEL_BACKGROUND_GRADIENT_COLOR": ACCENT, "CURRENT_ITEM_LABEL_SHADOW": SHADOW,
+        "CURRENT_ITEM_LABEL_SHADOW_WIDTH": 0, "CURRENT_ITEM_LABEL_SHADOW_X_OFFSET": 0,
+        "CURRENT_ITEM_LABEL_SHADOW_Y_OFFSET": 0,
         # floating name of the focused item, hidden by default (cells carry their own label)
         "CURRENT_ITEM_LABEL_ALIGNMENT": 5, "CURRENT_ITEM_LABEL_WIDTH": 0, "CURRENT_ITEM_LABEL_HEIGHT": 0,
         "CURRENT_ITEM_LABEL_OFFSET_X": 0, "CURRENT_ITEM_LABEL_OFFSET_Y": label_offset_y,
